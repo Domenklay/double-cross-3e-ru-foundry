@@ -3,7 +3,7 @@ name: Publish Double Cross v0.5.0
 on:
   push:
     paths:
-      - '.publish-v0.5.0/READY'
+      - '.publish-v0.5.0b/READY'
 
 permissions:
   contents: write
@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .publish-v0.5.0/part-*.txt > /tmp/dc050.b64
+          cat .publish-v0.5.0b/part-*.txt > /tmp/dc050.b64
           base64 -d /tmp/dc050.b64 > /tmp/dc050.tar.xz
           echo '3af792d35258cae7fd4cd0e320fbf03d2809c0bcae15e8cb992e78361ca778a6  /tmp/dc050.tar.xz' | sha256sum -c -
           mkdir -p /tmp/dc050-unpack
@@ -36,7 +36,7 @@ jobs:
           mkdir -p dist
           rm -f dist/double-cross-3e-ru-foundry-v14-v0.5.0-EQUIPMENT-COMBO-UI.zip
           (cd /tmp/dc050-unpack && zip -qr "$GITHUB_WORKSPACE/dist/double-cross-3e-ru-foundry-v14-v0.5.0-EQUIPMENT-COMBO-UI.zip" double-cross-3e-ru)
-          rm -rf .bootstrap .publish-v0.5.0
+          rm -rf .bootstrap .publish-v0.5.0 .publish-v0.5.0b
 
       - name: Commit published version
         shell: bash
