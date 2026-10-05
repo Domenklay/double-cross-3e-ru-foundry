@@ -1,0 +1,51 @@
+name: Publish Double Cross v0.5.0
+
+on:
+  push:
+    paths:
+      - '.publish-v0.5.0/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct source package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .publish-v0.5.0/part-*.txt > /tmp/dc050.b64
+          base64 -d /tmp/dc050.b64 > /tmp/dc050.tar.xz
+          echo '55dc57fb6b08d26b515b9e56cb1a2b85544b6b242adeabd8a8b88d6eeafb4b40  /tmp/dc050.tar.xz' | sha256sum -c -
+          mkdir -p /tmp/dc050-unpack
+          tar -xJf /tmp/dc050.tar.xz -C /tmp/dc050-unpack
+
+      - name: Publish source and install ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a /tmp/dc050-unpack/double-cross-3e-ru/. .
+          mkdir -p dist
+          rm -f dist/double-cross-3e-ru-foundry-v14-v0.5.0-EQUIPMENT-COMBO-UI.zip
+          (cd /tmp/dc050-unpack && zip -qr "$GITHUB_WORKSPACE/dist/double-cross-3e-ru-foundry-v14-v0.5.0-EQUIPMENT-COMBO-UI.zip" double-cross-3e-ru)
+          rm -rf .bootstrap .publish-v0.5.0
+
+      - name: Commit published version
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m 'Publish v0.5.0 equipment and combo UI'
+            git push
+          fi
