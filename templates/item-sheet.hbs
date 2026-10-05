@@ -1,0 +1,249 @@
+<div class="dx3-item-scroll">
+  <header class="dx3-item-header {{#if isPower}}power-header{{/if}} {{#if isCombo}}combo-header{{/if}}">
+    <img src="{{item.img}}" data-action="editImage" data-edit="img" title="Изменить изображение">
+    <div class="dx3-item-identity">
+      <span class="type-label">{{typeLabel}}</span>
+      <input class="item-name-input" type="text" name="name" value="{{item.name}}">
+
+      {{#if isPower}}
+      <div class="dx3-item-summary-tags">
+        <span><i class="fa-solid fa-dna"></i> {{system.syndrome}}</span>
+        <span><i class="fa-solid fa-layer-group"></i> Ур. {{system.level}} / {{system.maxLevel}}</span>
+        <span><i class="fa-solid fa-clock"></i> {{system.timing}}</span>
+        <span><i class="fa-solid fa-arrow-trend-up"></i> Вторжение {{system.encroachFormula}}</span>
+      </div>
+      {{/if}}
+
+      {{#if isWeapon}}
+      <div class="dx3-item-summary-tags">
+        <span><i class="fa-solid fa-crosshairs"></i> {{system.weaponType}}</span>
+        <span><i class="fa-solid fa-bullseye"></i> {{system.skill}}</span>
+        <span><i class="fa-solid fa-burst"></i> Сила {{system.attackPower}}</span>
+        <span><i class="fa-solid fa-box"></i> Запас {{system.stock}}</span>
+      </div>
+      {{/if}}
+
+      {{#if isArmor}}
+      <div class="dx3-item-summary-tags">
+        <span><i class="fa-solid fa-shield-halved"></i> {{system.armorType}}</span>
+        <span><i class="fa-solid fa-shield"></i> Броня {{system.armor}}</span>
+        <span><i class="fa-solid fa-person-running"></i> Уклонение {{system.dodge}}</span>
+        <span><i class="fa-solid fa-box"></i> Запас {{system.stock}}</span>
+      </div>
+      {{/if}}
+
+      {{#if isMisc}}
+      <div class="dx3-item-summary-tags">
+        <span><i class="fa-solid fa-box-open"></i> {{system.itemType}}</span>
+        <span><i class="fa-solid fa-list-check"></i> {{system.skill}}</span>
+        <span><i class="fa-solid fa-dice-d10"></i> Кубы {{system.diceBonus}}</span>
+        <span><i class="fa-solid fa-box"></i> Запас {{system.stock}}</span>
+      </div>
+      {{/if}}
+
+      {{#if isCombo}}
+      <div class="dx3-item-summary-tags">
+        <span><i class="fa-solid fa-link"></i> {{comboSelectedCount}} способн.</span>
+        <span><i class="fa-solid fa-clock"></i> {{comboAnalysis.timing}}</span>
+        <span><i class="fa-solid fa-dice-d10"></i> {{comboAnalysis.skill}}</span>
+        <span><i class="fa-solid fa-arrow-trend-up"></i> {{comboAnalysis.encroachDisplay}}</span>
+      </div>
+      {{/if}}
+    </div>
+  </header>
+
+  {{#if isPower}}
+  <nav class="dx3-item-tabs" aria-label="Разделы способности">
+    <button type="button" class="active" data-dx3-tab="description"><i class="fa-solid fa-book-open"></i> Описание</button>
+    <button type="button" data-dx3-tab="basic"><i class="fa-solid fa-sliders"></i> Основное</button>
+    <button type="button" data-dx3-tab="mechanics"><i class="fa-solid fa-dice-d10"></i> Механика</button>
+    <button type="button" data-dx3-tab="automation"><i class="fa-solid fa-gears"></i> Автоматизация</button>
+  </nav>
+
+  <section class="dx3-item-tab-panel active" data-dx3-tab-panel="description">
+    <div class="dx3-power-readout">
+      <div><small>Действие</small><b>{{system.timing}}</b></div>
+      <div><small>Навык</small><b>{{system.skill}}</b></div>
+      <div><small>Сложность</small><b>{{system.difficulty}}</b></div>
+      <div><small>Цель</small><b>{{system.target}}</b></div>
+      <div><small>Дистанция</small><b>{{system.range}}</b></div>
+      <div><small>Вторжение</small><b>{{system.encroachFormula}}</b></div>
+    </div>
+
+    <section class="dx3-panel dx3-description-card">
+      <div class="dx3-description-heading">
+        <div><h2>Описание способности</h2><small>Текст редактируется прямо здесь. HTML-код скрыт.</small></div>
+        <span class="dx3-edit-hint"><i class="fa-solid fa-pen"></i> редактируемое поле</span>
+      </div>
+      <div class="dx3-rich-description" data-description-editor contenteditable="true" spellcheck="true">{{{system.description}}}</div>
+    </section>
+
+    <section class="dx3-panel dx3-notes-card">
+      <label>Краткое примечание
+        <textarea name="system.notes" rows="3" placeholder="Короткая служебная заметка, не основное описание эффекта">{{system.notes}}</textarea>
+      </label>
+    </section>
+  </section>
+
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="basic" hidden>
+    <section class="dx3-panel dx3-item-section">
+      <div class="dx3-section-heading"><div><h2>Основные параметры</h2><small>Поля, которые чаще всего нужны игроку.</small></div></div>
+      <div class="dx3-item-form-grid basic-grid">
+        <label>Синдром<input type="text" name="system.syndrome" value="{{system.syndrome}}"></label>
+        <label>Источник<input type="text" name="system.source" value="{{system.source}}"></label>
+        <label>Уровень<input type="number" name="system.level" value="{{system.level}}" min="0" step="1"></label>
+        <label>Макс. уровень<input type="number" name="system.maxLevel" value="{{system.maxLevel}}" min="1" step="1"></label>
+        <label>Действие<input type="text" name="system.timing" value="{{system.timing}}"></label>
+        <label>Навык (отображение)<input type="text" name="system.skill" value="{{system.skill}}"></label>
+        <label class="span-2">Навык для автоматического броска<select name="system.skillKey">{{selectOptions skillOptions selected=system.skillKey}}</select></label>
+        <label>Сложность<input type="text" name="system.difficulty" value="{{system.difficulty}}"></label>
+        <label>Цель<input type="text" name="system.target" value="{{system.target}}"></label>
+        <label>Дистанция<input type="text" name="system.range" value="{{system.range}}"></label>
+        <label>Ограничение<input type="text" name="system.restrict" value="{{system.restrict}}"></label>
+        <label class="span-2">Стоимость вторжения / формула<input type="text" name="system.encroachFormula" value="{{system.encroachFormula}}" placeholder="Например: 2, 1d10, 1d4+3"></label>
+      </div>
+    </section>
+  </section>
+
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="mechanics" hidden>
+    <section class="dx3-panel dx3-item-section">
+      <div class="dx3-section-heading"><div><h2>Механика броска</h2><small>Числовые модификаторы и рост параметров по уровням.</small></div></div>
+      <div class="dx3-item-mechanics-grid">
+        <div class="dx3-mechanic-pair"><h3>Кубы</h3><label>Бонус кубов<input type="number" name="system.diceBonus" value="{{system.diceBonus}}" step="1"></label><label>За уровень<input type="number" name="system.dicePerLevel" value="{{system.dicePerLevel}}" step="1"></label></div>
+        <div class="dx3-mechanic-pair"><h3>Крит</h3><label>Критическое значение<input type="number" name="system.critical" value="{{system.critical}}" min="2" max="10" step="1"></label><label>За уровень<input type="number" name="system.criticalPerLevel" value="{{system.criticalPerLevel}}" step="1"></label></div>
+        <div class="dx3-mechanic-pair"><h3>Результат</h3><label>Бонус результата<input type="number" name="system.scoreBonus" value="{{system.scoreBonus}}" step="1"></label><label>За уровень<input type="number" name="system.scorePerLevel" value="{{system.scorePerLevel}}" step="1"></label></div>
+        <div class="dx3-mechanic-pair"><h3>Сила атаки</h3><label>Формула<input type="text" name="system.attackPower" value="{{system.attackPower}}" placeholder="Например: 5, 1d4+3, @level*2"></label><label>За уровень<input type="number" name="system.attackPerLevel" value="{{system.attackPerLevel}}" step="1"></label></div>
+        <div class="dx3-mechanic-pair"><h3>Защита (Guard)</h3><label>Бонус защиты<input type="number" name="system.guardBonus" value="{{system.guardBonus}}" step="1"></label><label>За уровень<input type="number" name="system.guardPerLevel" value="{{system.guardPerLevel}}" step="1"></label></div>
+        <div class="dx3-mechanic-pair uses-pair"><h3>Использования</h3><label>Осталось<input type="number" name="system.uses" value="{{system.uses}}" min="0" step="1"></label><label>Максимум<input type="number" name="system.maxUses" value="{{system.maxUses}}" min="0" step="1"></label></div>
+      </div>
+    </section>
+  </section>
+
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="automation" hidden>
+    <section class="dx3-panel dx3-item-section">
+      <div class="dx3-section-heading"><div><h2>Автоматизация</h2><small>Служебные настройки Foundry.</small></div></div>
+      <div class="dx3-automation-card">
+        <label>Режим автоматизации<select name="system.automation">{{selectOptions automationOptions selected=system.automation}}</select></label>
+        <label class="dx3-switch-line"><input type="checkbox" name="system.configured" {{checked system.configured}}><span><b>Базовая автоматизация настроена</b><small>Отмечайте, если способность уже поддерживается скриптами системы.</small></span></label>
+        <div class="dx3-automation-summary"><span><small>Навык</small><b>{{system.skillKey}}</b></span><span><small>Стоимость</small><b>{{system.encroachFormula}}</b></span><span><small>Формула атаки</small><b>{{system.attackPower}}</b></span></div>
+      </div>
+    </section>
+  </section>
+  {{/if}}
+
+  {{#if isWeapon}}
+  <nav class="dx3-item-tabs" aria-label="Разделы оружия">
+    <button type="button" class="active" data-dx3-tab="description"><i class="fa-solid fa-book-open"></i> Описание</button>
+    <button type="button" data-dx3-tab="basic"><i class="fa-solid fa-crosshairs"></i> Основное</button>
+    <button type="button" data-dx3-tab="mechanics"><i class="fa-solid fa-crosshairs"></i> Бой</button>
+  </nav>
+
+  <section class="dx3-item-tab-panel active" data-dx3-tab-panel="description">
+    <div class="dx3-power-readout dx3-equipment-readout">
+      <div><small>Тип</small><b>{{system.weaponType}}</b></div><div><small>Навык</small><b>{{system.skill}}</b></div><div><small>Точность</small><b>{{system.accuracy}}</b></div><div><small>Сила</small><b>{{system.attackPower}}</b></div><div><small>Защита</small><b>{{system.guard}}</b></div><div><small>Дальность</small><b>{{system.range}}</b></div>
+    </div>
+    <section class="dx3-panel dx3-description-card"><div class="dx3-description-heading"><div><h2>Описание оружия</h2><small>Обычное форматированное описание без HTML-кода.</small></div><span class="dx3-edit-hint"><i class="fa-solid fa-pen"></i> редактируемое поле</span></div><div class="dx3-rich-description" data-description-editor contenteditable="true" spellcheck="true">{{{system.description}}}</div></section>
+    <section class="dx3-panel dx3-notes-card"><label>Примечание<textarea name="system.notes" rows="3">{{system.notes}}</textarea></label></section>
+  </section>
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="basic" hidden>
+    <section class="dx3-panel dx3-item-section"><div class="dx3-section-heading"><div><h2>Оружие</h2><small>Тип, навык, дальность и состояние экипировки.</small></div></div><div class="dx3-item-form-grid"><label>Тип оружия<input type="text" name="system.weaponType" value="{{system.weaponType}}"></label><label>Навык (отображение)<input type="text" name="system.skill" value="{{system.skill}}"></label><label class="span-2">Навык для броска<select name="system.skillKey">{{selectOptions skillOptions selected=system.skillKey}}</select></label><label>Дистанция<input type="text" name="system.range" value="{{system.range}}"></label><label>Стоимость запаса<input type="number" name="system.stock" value="{{system.stock}}" min="0" step="1"></label><label class="dx3-switch-line span-2"><input type="checkbox" name="system.equipped" {{checked system.equipped}}><span><b>Экипировано</b><small>Учитывать как подготовленное к использованию оружие.</small></span></label></div></section>
+  </section>
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="mechanics" hidden>
+    <section class="dx3-panel dx3-item-section"><div class="dx3-section-heading"><div><h2>Боевые параметры</h2><small>То, что участвует в атаке, уроне и защите.</small></div></div><div class="dx3-stat-card-grid"><label><span>Точность</span><input type="number" name="system.accuracy" value="{{system.accuracy}}" step="1"></label><label><span>Сила атаки / формула</span><input type="text" name="system.attackPower" value="{{system.attackPower}}" placeholder="Например: 8 или 1d4+3"></label><label><span>Защита</span><input type="number" name="system.guard" value="{{system.guard}}" step="1"></label></div></section>
+  </section>
+  {{/if}}
+
+  {{#if isArmor}}
+  <nav class="dx3-item-tabs" aria-label="Разделы брони"><button type="button" class="active" data-dx3-tab="description"><i class="fa-solid fa-book-open"></i> Описание</button><button type="button" data-dx3-tab="basic"><i class="fa-solid fa-shield-halved"></i> Параметры</button></nav>
+  <section class="dx3-item-tab-panel active" data-dx3-tab-panel="description">
+    <div class="dx3-power-readout dx3-equipment-readout four"><div><small>Тип</small><b>{{system.armorType}}</b></div><div><small>Броня</small><b>{{system.armor}}</b></div><div><small>Уклонение</small><b>{{system.dodge}}</b></div><div><small>Штраф инициативы</small><b>{{system.initiative}}</b></div></div>
+    <section class="dx3-panel dx3-description-card"><div class="dx3-description-heading"><div><h2>Описание брони</h2><small>Обычное форматированное описание без HTML-кода.</small></div><span class="dx3-edit-hint"><i class="fa-solid fa-pen"></i> редактируемое поле</span></div><div class="dx3-rich-description" data-description-editor contenteditable="true" spellcheck="true">{{{system.description}}}</div></section><section class="dx3-panel dx3-notes-card"><label>Примечание<textarea name="system.notes" rows="3">{{system.notes}}</textarea></label></section>
+  </section>
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="basic" hidden><section class="dx3-panel dx3-item-section"><div class="dx3-section-heading"><div><h2>Параметры брони</h2><small>Основные значения собраны в одном месте.</small></div></div><div class="dx3-stat-card-grid"><label><span>Тип</span><input type="text" name="system.armorType" value="{{system.armorType}}"></label><label><span>Броня</span><input type="number" name="system.armor" value="{{system.armor}}" step="1"></label><label><span>Модификатор уклонения</span><input type="number" name="system.dodge" value="{{system.dodge}}" step="1"></label><label><span>Штраф инициативы</span><input type="number" name="system.initiative" value="{{system.initiative}}" step="1" min="0"></label><label><span>Стоимость запаса</span><input type="number" name="system.stock" value="{{system.stock}}" min="0" step="1"></label><label class="dx3-switch-line"><input type="checkbox" name="system.equipped" {{checked system.equipped}}><span><b>Экипировано</b><small>Параметры брони входят в производные значения персонажа.</small></span></label></div></section></section>
+  {{/if}}
+
+  {{#if isMisc}}
+  <nav class="dx3-item-tabs" aria-label="Разделы предмета"><button type="button" class="active" data-dx3-tab="description"><i class="fa-solid fa-book-open"></i> Описание</button><button type="button" data-dx3-tab="basic"><i class="fa-solid fa-box-open"></i> Параметры</button></nav>
+  <section class="dx3-item-tab-panel active" data-dx3-tab-panel="description">
+    <div class="dx3-power-readout dx3-equipment-readout four"><div><small>Тип</small><b>{{system.itemType}}</b></div><div><small>Навык</small><b>{{system.skill}}</b></div><div><small>Бонус кубов</small><b>{{system.diceBonus}}</b></div><div><small>Бонус результата</small><b>{{system.scoreBonus}}</b></div></div>
+    <section class="dx3-panel dx3-description-card"><div class="dx3-description-heading"><div><h2>Описание предмета</h2><small>Обычное форматированное описание без HTML-кода.</small></div><span class="dx3-edit-hint"><i class="fa-solid fa-pen"></i> редактируемое поле</span></div><div class="dx3-rich-description" data-description-editor contenteditable="true" spellcheck="true">{{{system.description}}}</div></section><section class="dx3-panel dx3-notes-card"><label>Примечание<textarea name="system.notes" rows="3">{{system.notes}}</textarea></label></section>
+  </section>
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="basic" hidden><section class="dx3-panel dx3-item-section"><div class="dx3-section-heading"><div><h2>Параметры предмета</h2><small>Тип, связанный навык и игровые бонусы.</small></div></div><div class="dx3-stat-card-grid"><label><span>Тип</span><input type="text" name="system.itemType" value="{{system.itemType}}"></label><label><span>Навык</span><input type="text" name="system.skill" value="{{system.skill}}"></label><label><span>Стоимость запаса</span><input type="number" name="system.stock" value="{{system.stock}}" min="0" step="1"></label><label><span>Бонус кубов</span><input type="number" name="system.diceBonus" value="{{system.diceBonus}}" step="1"></label><label><span>Бонус результата</span><input type="number" name="system.scoreBonus" value="{{system.scoreBonus}}" step="1"></label><label class="dx3-switch-line"><input type="checkbox" name="system.equipped" {{checked system.equipped}}><span><b>Активно / экипировано</b><small>Пометка для удобства игрока.</small></span></label></div></section></section>
+  {{/if}}
+
+  {{#if isCombo}}
+  <nav class="dx3-item-tabs" aria-label="Разделы комбо">
+    <button type="button" class="active" data-dx3-tab="builder"><i class="fa-solid fa-link"></i> Конструктор</button>
+    <button type="button" data-dx3-tab="rules"><i class="fa-solid fa-calculator"></i> Итог</button>
+    <button type="button" data-dx3-tab="description"><i class="fa-solid fa-book-open"></i> Описание</button>
+  </nav>
+
+  <section class="dx3-item-tab-panel active" data-dx3-tab-panel="builder">
+    <input type="hidden" name="system.powerIds" value="{{comboPowerIdsJson}}" data-combo-power-ids>
+    <section class="dx3-panel dx3-combo-builder">
+      <div class="dx3-section-heading"><div><h2>Собрать комбо</h2><small>Выберите минимум две способности персонажа. Несовместимые варианты блокируются по правилам комбинаций.</small></div><span class="dx3-combo-count">{{comboSelectedCount}} выбрано</span></div>
+      <div class="dx3-combo-rule-strip"><span><i class="fa-solid fa-clock"></i> общий тайминг</span><span><i class="fa-solid fa-dice-d10"></i> общий навык</span><span><i class="fa-solid fa-filter"></i> цель и дальность сужаются</span><span><i class="fa-solid fa-arrow-trend-up"></i> стоимость складывается</span></div>
+
+      <div class="dx3-combo-power-list">
+        {{#each comboPowers as |row|}}
+        <label class="dx3-combo-power-choice {{#if row.selected}}selected{{/if}} {{#if row.disabled}}disabled{{/if}}" title="{{row.reason}}">
+          <input type="checkbox" value="{{row.item.id}}" data-combo-power-check {{checked row.selected}} {{#if row.disabled}}disabled{{/if}}>
+          <img src="{{row.item.img}}" alt="">
+          <span class="main"><strong>{{row.item.name}}</strong><small>{{row.item.system.syndrome}} · ур. {{row.level}}{{#if row.item.system.maxLevel}}/{{row.item.system.maxLevel}}{{/if}}</small></span>
+          <span class="meta"><b>{{row.item.system.timing}}</b><small>{{row.item.system.skill}}</small></span>
+          <span class="cost">{{row.item.system.encroachFormula}}</span>
+          {{#if row.reason}}<span class="reason"><i class="fa-solid fa-circle-exclamation"></i> {{row.reason}}</span>{{/if}}
+        </label>
+        {{else}}
+        <div class="dx3-power-sheet-empty">Сначала добавьте персонажу способности.</div>
+        {{/each}}
+      </div>
+    </section>
+
+    {{#if comboAnalysis.errors.length}}
+    <section class="dx3-combo-messages error"><h3><i class="fa-solid fa-triangle-exclamation"></i> Комбо пока не готово</h3>{{#each comboAnalysis.errors as |message|}}<p>{{message}}</p>{{/each}}</section>
+    {{/if}}
+    {{#if comboAnalysis.warnings.length}}
+    <section class="dx3-combo-messages warning"><h3><i class="fa-solid fa-circle-info"></i> Нужно учитывать вручную</h3>{{#each comboAnalysis.warnings as |message|}}<p>{{message}}</p>{{/each}}</section>
+    {{/if}}
+
+    <section class="dx3-combo-preview-grid">
+      {{#each comboPreviewBands as |band|}}
+      <article class="dx3-combo-preview-card {{#if band.analysis.valid}}ready{{else}}invalid{{/if}}">
+        <header><strong>{{band.label}}</strong><span>уровни сил +{{band.analysis.levelBonus}}</span></header>
+        <div><small>Кубы</small><b>{{band.analysis.diceBonus}}</b></div><div><small>Крит</small><b>{{band.analysis.critical}}</b></div><div><small>Результат</small><b>{{band.analysis.scoreBonus}}</b></div><div><small>Сила</small><b>{{band.analysis.attackFormula}}</b></div><div><small>Защита</small><b>{{band.analysis.guardValue}}</b></div>
+        <footer>Вторжение: <strong>{{band.analysis.encroachDisplay}}</strong></footer>
+      </article>
+      {{/each}}
+    </section>
+  </section>
+
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="rules" hidden>
+    <section class="dx3-panel dx3-item-section">
+      <div class="dx3-section-heading"><div><h2>Итог комбинации</h2><small>Параметры считаются из выбранных способностей и текущего Вторжения.</small></div></div>
+      <div class="dx3-power-readout dx3-combo-readout"><div><small>Действие</small><b>{{comboAnalysis.timing}}</b></div><div><small>Навык</small><b>{{comboAnalysis.skill}}</b></div><div><small>Сложность</small><b>{{comboAnalysis.difficulty}}</b></div><div><small>Цель</small><b>{{comboAnalysis.target}}</b></div><div><small>Дистанция</small><b>{{comboAnalysis.range}}</b></div><div><small>Вторжение</small><b>{{comboAnalysis.encroachDisplay}}</b></div></div>
+
+      <div class="dx3-item-form-grid">
+        <label>Условие / памятка<input type="text" name="system.condition" value="{{system.condition}}" placeholder="Например: после малого действия"></label>
+        <label>Выбранный тайминг<select name="system.timing">{{selectOptions comboTimingOptions selected=comboAnalysis.timing}}</select></label>
+        <label>Навык проверки<select name="system.skillKey">{{selectOptions comboSkillOptions selected=comboAnalysis.skillKey}}</select></label>
+        <label>Цель<select name="system.target">{{selectOptions comboTargetOptions selected=comboAnalysis.target}}</select></label>
+        <label class="span-2">Оружие для атаки / защиты<select name="system.weaponId">{{selectOptions comboWeaponOptions selected=system.weaponId}}</select></label>
+        <label class="dx3-switch-line span-2"><input type="checkbox" name="system.autoCalculate" {{checked system.autoCalculate}}><span><b>Считать комбо автоматически</b><small>Рекомендуется. При использовании система заново учитывает текущее Вторжение и уровни способностей.</small></span></label>
+      </div>
+    </section>
+
+    <section class="dx3-combo-rules-help">
+      <article><b>Тайминг</b><p>{{comboRules.timing}}</p></article><article><b>Навык</b><p>{{comboRules.skill}}</p></article><article><b>Цель</b><p>{{comboRules.target}}</p></article><article><b>Дальность</b><p>{{comboRules.range}}</p></article><article><b>Сложность</b><p>{{comboRules.difficulty}}</p></article><article><b>Вторжение</b><p>{{comboRules.encroach}}</p></article><article><b>Атака</b><p>{{comboRules.attack}}</p></article><article><b>Реакция</b><p>{{comboRules.reaction}}</p></article>
+    </section>
+
+    {{#unless system.autoCalculate}}
+    <section class="dx3-panel dx3-item-section"><div class="dx3-section-heading"><div><h2>Ручные параметры старого формата</h2><small>Используются только когда автоматический расчёт выключен.</small></div></div><div class="dx3-two-column combo-config"><div class="dx3-mechanic-pair"><h3>До 100%</h3><label>Бонус кубов<input type="number" name="system.diceUnder" value="{{system.diceUnder}}" step="1"></label><label>Крит<input type="number" name="system.criticalUnder" value="{{system.criticalUnder}}" min="2" max="10"></label><label>Сила атаки<input type="text" name="system.attackUnder" value="{{system.attackUnder}}"></label><label>Примечание<input type="text" name="system.notesUnder" value="{{system.notesUnder}}"></label></div><div class="dx3-mechanic-pair"><h3>100% и выше</h3><label>Бонус кубов<input type="number" name="system.diceOver" value="{{system.diceOver}}" step="1"></label><label>Крит<input type="number" name="system.criticalOver" value="{{system.criticalOver}}" min="2" max="10"></label><label>Сила атаки<input type="text" name="system.attackOver" value="{{system.attackOver}}"></label><label>Примечание<input type="text" name="system.notesOver" value="{{system.notesOver}}"></label></div></div><div class="dx3-item-form-grid"><label class="span-2">Стоимость вторжения / формула<input type="text" name="system.encroachFormula" value="{{system.encroachFormula}}"></label></div></section>
+    {{/unless}}
+  </section>
+
+  <section class="dx3-item-tab-panel" data-dx3-tab-panel="description" hidden>
+    <section class="dx3-panel dx3-description-card"><div class="dx3-description-heading"><div><h2>Описание комбо</h2><small>Опишите визуальный эффект, тактику или напоминания игроку.</small></div><span class="dx3-edit-hint"><i class="fa-solid fa-pen"></i> редактируемое поле</span></div><div class="dx3-rich-description" data-description-editor contenteditable="true" spellcheck="true">{{{system.description}}}</div></section><section class="dx3-panel dx3-notes-card"><label>Примечание<textarea name="system.notes" rows="3">{{system.notes}}</textarea></label></section>
+  </section>
+  {{/if}}
+</div>
