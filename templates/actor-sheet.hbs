@@ -1,0 +1,355 @@
+<div class="dx3-sheet-scroll">
+  <header class="dx3-header">
+    <img class="profile-img" src="{{actor.img}}" data-action="pickTokenImage" title="Нажмите, чтобы выбрать изображение актёра и токена из библиотеки Foundry">
+    <div class="identity">
+      <div class="title-row">
+        <div>
+          <div class="system-title">DOUBLE CROSS</div>
+          <div class="system-subtitle">THE 3rd EDITION · {{actorTypeLabel}}</div>
+        </div>
+        <div class="header-actions">
+          {{#if isCharacter}}<button type="button" class="primary-action" data-action="characterCreator"><i class="fa-solid fa-wand-magic-sparkles"></i> Мастер создания</button>{{/if}}
+          <button type="button" data-action="powerLibrary"><i class="fa-solid fa-book-open"></i> Способности</button>
+          <button type="button" data-action="equipmentLibrary"><i class="fa-solid fa-box-open"></i> Снаряжение</button>
+          <button type="button" data-action="customCheck"><i class="fa-solid fa-dice-d10"></i> Проверка</button>
+          <button type="button" data-action="damageDialog"><i class="fa-solid fa-burst"></i> Урон</button>
+        </div>
+      </div>
+
+      <div class="identity-grid">
+        <label class="wide">Имя / кодовое имя
+          <input type="text" name="name" value="{{actor.name}}">
+        </label>
+        <label>Кодовое имя
+          <input type="text" name="system.details.codename" value="{{system.details.codename}}">
+        </label>
+        <label>Игрок
+          <input type="text" name="system.details.playerName" value="{{system.details.playerName}}">
+        </label>
+        <label>Потрачено XP
+          <input type="number" name="system.details.spentXp" value="{{system.details.spentXp}}" min="0" step="1">
+        </label>
+        {{#if isCharacter}}
+        <label>XP в наличии
+          <input type="number" name="system.details.availableXp" value="{{system.details.availableXp}}" min="0" step="1">
+        </label>
+        <button type="button" class="xp-upgrade-button" data-action="characterAdvancement"><i class="fa-solid fa-arrow-up-right-dots"></i> Прокачка за XP</button>
+        {{/if}}
+      </div>
+    </div>
+  </header>
+
+  {{#if isCharacter}}
+  <section class="dx3-player-guide">
+    <div><i class="fa-solid fa-circle-info"></i><strong> Быстрый старт для игрока</strong><span>Метод: {{creationMethodLabel}}</span></div>
+    <p>Для нового героя нажмите <b>«Мастер создания»</b>: он проведёт по типу крови, синдромам, профессии, характеристикам, навыкам, способностям и стартовому снаряжению. Названия характеристик и навыков ниже являются кнопками броска.</p>
+  </section>
+  {{/if}}
+
+  <section class="dx3-resource-strip">
+    <div class="resource hp">
+      <span>ОЗ</span>
+      <input type="number" name="system.hp.value" value="{{system.hp.value}}" step="1">
+      <b>/ {{system.hp.max}}</b>
+      <button type="button" data-action="restoreHp" title="Восстановить до максимума"><i class="fa-solid fa-heart"></i></button>
+    </div>
+    <div class="resource encroachment {{encroachmentClass}}">
+      <span>Вторжение</span>
+      <input type="number" name="system.encroachment.value" value="{{system.encroachment.value}}" min="0" step="1">
+      <b>%</b>
+      <small>кубы +{{system.encroachment.diceBonus}}, уровни +{{system.encroachment.powerLevelBonus}}</small>
+    </div>
+    <div class="resource stock">
+      <span>Запас</span>
+      <input type="number" name="system.stock.value" value="{{system.stock.value}}" min="0" step="1">
+      <b>/ {{system.stock.max}}</b>
+    </div>
+    <div class="resource compact-resource"><span>Сбережения</span><input type="number" name="system.savings" value="{{system.savings}}" min="0" step="1"></div>
+    <div class="resource compact-resource"><span>Инициатива</span><b>{{system.initiative}}</b></div>
+    <div class="resource compact-resource"><span>Ход</span><b>{{system.move}} м</b></div>
+    <div class="resource compact-resource"><span>Рывок</span><b>{{system.dash}} м</b></div>
+    <div class="resource compact-resource"><span>Броня</span><b>{{system.armorTotal}}</b></div>
+  </section>
+
+  <section class="dx3-enc-actions">
+    <label>Базовое вторжение <input type="number" name="system.encroachment.base" value="{{system.encroachment.base}}" min="0" step="1"></label>
+    <button type="button" data-action="sceneEntry"><i class="fa-solid fa-door-open"></i> Войти в сцену (+1d10)</button>
+    <button type="button" data-action="impulseCheck"><i class="fa-solid fa-brain"></i> Проверка импульса</button>
+    <button type="button" data-action="backtrack"><i class="fa-solid fa-rotate-left"></i> Backtrack</button>
+    <button type="button" data-action="resetEncroachment"><i class="fa-solid fa-arrow-rotate-left"></i> К базовому</button>
+  </section>
+
+  <div class="dx3-two-column">
+    <section class="dx3-panel">
+      <h2>Персонаж</h2>
+      <div class="detail-grid">
+        <label>Возраст<input type="text" name="system.details.age" value="{{system.details.age}}"></label>
+        <label>Пол<input type="text" name="system.details.gender" value="{{system.details.gender}}"></label>
+        <label>Зодиак<input type="text" name="system.details.zodiac" value="{{system.details.zodiac}}"></label>
+        <label>Рост<input type="text" name="system.details.height" value="{{system.details.height}}"></label>
+        <label>Вес<input type="text" name="system.details.weight" value="{{system.details.weight}}"></label>
+        <label>Группа крови<input type="text" name="system.details.bloodType" value="{{system.details.bloodType}}"></label>
+        <label>Тип крови / Breed<input type="text" name="system.details.breed" value="{{system.details.breed}}" placeholder="Чистокровный / Кроссбрид / Трибрид"></label>
+        <label class="wide">Синдромы<input type="text" name="system.details.syndromes" value="{{system.details.syndromes}}"></label>
+        <label>Подсиндром<input type="text" name="system.details.subSyndrome" value="{{system.details.subSyndrome}}"></label>
+        <label>Профессия<input type="text" name="system.details.work" value="{{system.details.work}}"></label>
+        <label>Прикрытие<input type="text" name="system.details.cover" value="{{system.details.cover}}"></label>
+      </div>
+    </section>
+
+    <section class="dx3-panel derived-panel">
+      <h2>Расчётные параметры</h2>
+      <div class="derived-grid">
+        <div><span>Макс. ОЗ</span><b>{{system.hp.max}}</b><small>Тело × 2 + Разум + 20 + бонус</small></div>
+        <div><span>Макс. запас</span><b>{{system.stock.max}}</b><small>Социум × 2 + Снабжение × 2 + бонус</small></div>
+        <div><span>Инициатива</span><b>{{system.initiative}}</b><small>Чувства × 2 + Разум + бонус − броня</small></div>
+        <div><span>Уклонение от брони</span><b>{{system.dodgeItemMod}}</b><small>сумма модификаторов экипированной брони</small></div>
+      </div>
+      <div class="bonus-grid">
+        <label>Бонус макс. ОЗ<input type="number" name="system.hp.bonus" value="{{system.hp.bonus}}" step="1"></label>
+        <label>Бонус запаса<input type="number" name="system.stock.bonus" value="{{system.stock.bonus}}" step="1"></label>
+        <label>Бонус инициативы<input type="number" name="system.initiativeBonus" value="{{system.initiativeBonus}}" step="1"></label>
+        <label>Бонус перемещения<input type="number" name="system.moveBonus" value="{{system.moveBonus}}" step="1"></label>
+      </div>
+    </section>
+  </div>
+
+  <section class="dx3-panel stats-panel">
+    <div class="section-title-actions"><h2>Характеристики и навыки</h2><small class="section-hint"><i class="fa-solid fa-dice-d10"></i> Нажмите название характеристики или навыка для броска</small></div>
+    <div class="stats-grid">
+      <div class="stat-block">
+        <button type="button" class="stat-title" data-action="rollStat" data-stat="body">Тело <strong>{{system.stats.body}}</strong></button>
+        <input class="stat-input" type="number" name="system.stats.body" value="{{system.stats.body}}" min="0" step="1">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="melee">Ближний бой</button><input type="number" name="system.skills.melee" value="{{system.skills.melee}}" min="0">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="dodge">Уклонение</button><input type="number" name="system.skills.dodge" value="{{system.skills.dodge}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="ride1">Вождение:</button><input type="text" name="system.skills.ride1.name" value="{{system.skills.ride1.name}}"></div><input type="number" name="system.skills.ride1.value" value="{{system.skills.ride1.value}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="ride2">Вождение:</button><input type="text" name="system.skills.ride2.name" value="{{system.skills.ride2.name}}"></div><input type="number" name="system.skills.ride2.value" value="{{system.skills.ride2.value}}" min="0">
+        {{#each customSkills.ride as |row|}}
+        <div class="custom-skill extra-skill"><button type="button" data-action="rollSkill" data-skill="custom:{{row.id}}">Вождение:</button><input type="text" name="system.skills.custom.{{row.id}}.name" value="{{row.name}}"><button type="button" class="skill-remove" data-action="skillDelete" data-skill-id="{{row.id}}" title="Удалить строку"><i class="fa-solid fa-xmark"></i></button></div><input type="number" name="system.skills.custom.{{row.id}}.value" value="{{row.value}}" min="0">
+        {{/each}}
+        <button type="button" class="skill-add" data-action="skillAdd" data-category="ride"><i class="fa-solid fa-plus"></i> строка навыка</button><span></span>
+      </div>
+
+      <div class="stat-block">
+        <button type="button" class="stat-title" data-action="rollStat" data-stat="sense">Чувства <strong>{{system.stats.sense}}</strong></button>
+        <input class="stat-input" type="number" name="system.stats.sense" value="{{system.stats.sense}}" min="0" step="1">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="ranged">Дальний бой</button><input type="number" name="system.skills.ranged" value="{{system.skills.ranged}}" min="0">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="perception">Восприятие</button><input type="number" name="system.skills.perception" value="{{system.skills.perception}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="art1">Искусство:</button><input type="text" name="system.skills.art1.name" value="{{system.skills.art1.name}}"></div><input type="number" name="system.skills.art1.value" value="{{system.skills.art1.value}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="art2">Искусство:</button><input type="text" name="system.skills.art2.name" value="{{system.skills.art2.name}}"></div><input type="number" name="system.skills.art2.value" value="{{system.skills.art2.value}}" min="0">
+        {{#each customSkills.art as |row|}}
+        <div class="custom-skill extra-skill"><button type="button" data-action="rollSkill" data-skill="custom:{{row.id}}">Искусство:</button><input type="text" name="system.skills.custom.{{row.id}}.name" value="{{row.name}}"><button type="button" class="skill-remove" data-action="skillDelete" data-skill-id="{{row.id}}" title="Удалить строку"><i class="fa-solid fa-xmark"></i></button></div><input type="number" name="system.skills.custom.{{row.id}}.value" value="{{row.value}}" min="0">
+        {{/each}}
+        <button type="button" class="skill-add" data-action="skillAdd" data-category="art"><i class="fa-solid fa-plus"></i> строка навыка</button><span></span>
+      </div>
+
+      <div class="stat-block">
+        <button type="button" class="stat-title" data-action="rollStat" data-stat="mind">Разум <strong>{{system.stats.mind}}</strong></button>
+        <input class="stat-input" type="number" name="system.stats.mind" value="{{system.stats.mind}}" min="0" step="1">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="rc">РК</button><input type="number" name="system.skills.rc" value="{{system.skills.rc}}" min="0">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="will">Воля</button><input type="number" name="system.skills.will" value="{{system.skills.will}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="knowledge1">Знания:</button><input type="text" name="system.skills.knowledge1.name" value="{{system.skills.knowledge1.name}}"></div><input type="number" name="system.skills.knowledge1.value" value="{{system.skills.knowledge1.value}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="knowledge2">Знания:</button><input type="text" name="system.skills.knowledge2.name" value="{{system.skills.knowledge2.name}}"></div><input type="number" name="system.skills.knowledge2.value" value="{{system.skills.knowledge2.value}}" min="0">
+        {{#each customSkills.knowledge as |row|}}
+        <div class="custom-skill extra-skill"><button type="button" data-action="rollSkill" data-skill="custom:{{row.id}}">Знания:</button><input type="text" name="system.skills.custom.{{row.id}}.name" value="{{row.name}}"><button type="button" class="skill-remove" data-action="skillDelete" data-skill-id="{{row.id}}" title="Удалить строку"><i class="fa-solid fa-xmark"></i></button></div><input type="number" name="system.skills.custom.{{row.id}}.value" value="{{row.value}}" min="0">
+        {{/each}}
+        <button type="button" class="skill-add" data-action="skillAdd" data-category="knowledge"><i class="fa-solid fa-plus"></i> строка навыка</button><span></span>
+      </div>
+
+      <div class="stat-block">
+        <button type="button" class="stat-title" data-action="rollStat" data-stat="social">Социум <strong>{{system.stats.social}}</strong></button>
+        <input class="stat-input" type="number" name="system.stats.social" value="{{system.stats.social}}" min="0" step="1">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="negotiation">Переговоры</button><input type="number" name="system.skills.negotiation" value="{{system.skills.negotiation}}" min="0">
+        <button type="button" class="skill-roll" data-action="rollSkill" data-skill="procure">Снабжение</button><input type="number" name="system.skills.procure" value="{{system.skills.procure}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="info1">Информация:</button><input type="text" name="system.skills.info1.name" value="{{system.skills.info1.name}}"></div><input type="number" name="system.skills.info1.value" value="{{system.skills.info1.value}}" min="0">
+        <div class="custom-skill"><button type="button" data-action="rollSkill" data-skill="info2">Информация:</button><input type="text" name="system.skills.info2.name" value="{{system.skills.info2.name}}"></div><input type="number" name="system.skills.info2.value" value="{{system.skills.info2.value}}" min="0">
+        {{#each customSkills.info as |row|}}
+        <div class="custom-skill extra-skill"><button type="button" data-action="rollSkill" data-skill="custom:{{row.id}}">Информация:</button><input type="text" name="system.skills.custom.{{row.id}}.name" value="{{row.name}}"><button type="button" class="skill-remove" data-action="skillDelete" data-skill-id="{{row.id}}" title="Удалить строку"><i class="fa-solid fa-xmark"></i></button></div><input type="number" name="system.skills.custom.{{row.id}}.value" value="{{row.value}}" min="0">
+        {{/each}}
+        <button type="button" class="skill-add" data-action="skillAdd" data-category="info"><i class="fa-solid fa-plus"></i> строка навыка</button><span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="dx3-panel">
+    <h2>История жизни</h2>
+    <div class="life-grid">
+      <label>Происхождение<input type="text" name="system.details.origin" value="{{system.details.origin}}"></label>
+      <label>Опыт<input type="text" name="system.details.experience" value="{{system.details.experience}}"></label>
+      <label>Встреча<input type="text" name="system.details.encounter" value="{{system.details.encounter}}"></label>
+      <label>Пробуждение<input type="text" name="system.details.awakening" value="{{system.details.awakening}}"></label>
+      <label>Импульс<input type="text" name="system.details.impulse" value="{{system.details.impulse}}"></label>
+    </div>
+  </section>
+
+  <section class="dx3-panel">
+    <div class="section-title-actions">
+      <h2>Лоис <small>активных для Backtrack: {{activeLoises}}</small></h2>
+    </div>
+    <div class="table-wrap">
+      <table class="dx3-table loises-table">
+        <thead><tr><th>Отношение</th><th>Имя</th><th>Положительная эмоция</th><th>Отрицательная эмоция</th></tr></thead>
+        <tbody>
+          {{#each system.loises as |l key|}}
+          <tr class="lois-main-row">
+            <td><input type="text" name="system.loises.{{key}}.relationship" value="{{l.relationship}}"></td>
+            <td><input type="text" name="system.loises.{{key}}.name" value="{{l.name}}"></td>
+            <td><input type="text" name="system.loises.{{key}}.positive" value="{{l.positive}}"></td>
+            <td><input type="text" name="system.loises.{{key}}.negative" value="{{l.negative}}"></td>
+          </tr>
+          <tr class="lois-flags-row">
+            <td colspan="4">
+              <div class="lois-flags">
+                <label title="Если флажок снят, активной считается отрицательная эмоция"><input type="checkbox" name="system.loises.{{key}}.positiveActive" {{checked l.positiveActive}}> Активна положительная эмоция</label>
+                <label><input type="checkbox" name="system.loises.{{key}}.special" {{checked l.special}}> S-Лоис</label>
+                <label><input type="checkbox" name="system.loises.{{key}}.titus" {{checked l.titus}}> Титус</label>
+                <label><input type="checkbox" name="system.loises.{{key}}.discarded" {{checked l.discarded}}> Сброшена</label>
+              </div>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="dx3-panel dx3-character-powers">
+    <div class="section-title-actions">
+      <h2>Способности</h2>
+      <button type="button" class="library-action" data-action="powerLibrary"><i class="fa-solid fa-book-open"></i> Библиотека</button>
+      <button type="button" data-action="itemCreate" data-type="power"><i class="fa-solid fa-plus"></i> Вручную</button>
+    </div>
+
+    <div class="dx3-power-sheet-toolbar">
+      <div class="dx3-power-sheet-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" data-power-sheet-search placeholder="Поиск способности, синдрома, действия, навыка…">
+        <button type="button" data-power-sheet-search-clear title="Очистить поиск"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <span>Показано: <b data-power-sheet-visible>{{powers.length}}</b> / {{powers.length}}</span>
+    </div>
+
+    <div class="dx3-power-sheet-list">
+      {{#each powerGroups as |group|}}
+      <section class="dx3-character-power-group" data-character-power-group>
+        <header>
+          <strong>{{group.name}}</strong>
+          <span data-power-group-count>{{group.count}}</span>
+        </header>
+        <div class="dx3-character-power-columns" aria-hidden="true">
+          <span>Способность</span><span>Действие</span><span>Навык</span><span>Цель</span><span>Дистанция</span><span>Вторжение</span><span></span>
+        </div>
+        <div class="dx3-character-power-rows">
+          {{#each group.rows as |row|}}
+          <article class="dx3-character-power-row draggable" data-item-id="{{row.item.id}}" data-power-search-text="{{row.searchText}}">
+            <div class="dx3-character-power-main">
+              <img src="{{row.item.img}}" alt="">
+              <div>
+                <a class="dx3-character-power-name" data-action="itemEdit">{{row.item.name}}</a>
+                <small>{{row.item.system.source}} · Ур. {{row.levelLabel}}{{#if row.item.system.maxLevel}} / {{row.item.system.maxLevel}}{{/if}}</small>
+              </div>
+            </div>
+            <div class="dx3-character-power-cell" data-label="Действие">{{row.item.system.timing}}</div>
+            <div class="dx3-character-power-cell" data-label="Навык">{{row.item.system.skill}}</div>
+            <div class="dx3-character-power-cell" data-label="Цель">{{row.item.system.target}}</div>
+            <div class="dx3-character-power-cell" data-label="Дистанция">{{row.item.system.range}}</div>
+            <div class="dx3-character-power-cell dx3-power-cost" data-label="Вторжение">{{row.item.system.encroachFormula}}</div>
+            <div class="dx3-character-power-actions">
+              <button type="button" data-action="itemUse" title="Использовать"><i class="fa-solid fa-play"></i></button>
+              <button type="button" data-action="powerDamage" title="Бросок урона"><i class="fa-solid fa-burst"></i></button>
+              <button type="button" data-power-inline-toggle title="Показать описание"><i class="fa-solid fa-chevron-down"></i></button>
+              <button type="button" data-action="itemEdit" title="Открыть"><i class="fa-solid fa-pen"></i></button>
+              <button type="button" data-action="itemDelete" title="Удалить"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div class="dx3-power-inline-description" hidden>
+              <div class="dx3-power-inline-meta">
+                <span><b>Синдром:</b> {{row.item.system.syndrome}}</span>
+                <span><b>Сложность:</b> {{row.item.system.difficulty}}</span>
+                <span><b>Ограничение:</b> {{row.item.system.restrict}}</span>
+              </div>
+              <div class="dx3-power-inline-text">{{{row.item.system.description}}}</div>
+            </div>
+          </article>
+          {{/each}}
+        </div>
+      </section>
+      {{else}}
+      <div class="dx3-power-sheet-empty">У персонажа пока нет способностей.</div>
+      {{/each}}
+    </div>
+  </section>
+
+  <section class="dx3-panel dx3-gear-section">
+    <div class="section-title-actions">
+      <h2>Оружие</h2>
+      <button type="button" class="library-action" data-action="equipmentLibrary"><i class="fa-solid fa-box-open"></i> Каталог</button>
+      <button type="button" data-action="itemCreate" data-type="weapon"><i class="fa-solid fa-plus"></i> Вручную</button>
+    </div>
+    <div class="dx3-gear-list">
+      <div class="dx3-gear-columns weapon" aria-hidden="true"><span>Оружие</span><span>Навык</span><span>Точность</span><span>Сила</span><span>Защита</span><span>Дальность</span><span></span></div>
+      {{#each weapons as |item|}}
+      <article class="dx3-gear-row weapon draggable" data-item-id="{{item.id}}">
+        <div class="dx3-gear-main"><img src="{{item.img}}" alt=""><div><a data-action="itemEdit">{{item.name}}</a><small>{{item.system.weaponType}} · запас {{item.system.stock}}{{#if item.system.equipped}} · экипировано{{/if}}</small></div></div>
+        <div class="dx3-gear-value" data-label="Навык">{{item.system.skill}}</div>
+        <div class="dx3-gear-value" data-label="Точность">{{item.system.accuracy}}</div>
+        <div class="dx3-gear-value strong" data-label="Сила">{{item.system.attackPower}}</div>
+        <div class="dx3-gear-value" data-label="Защита">{{item.system.guard}}</div>
+        <div class="dx3-gear-value" data-label="Дальность">{{item.system.range}}</div>
+        <div class="dx3-gear-actions"><button type="button" data-action="weaponAttack" title="Атака"><i class="fa-solid fa-crosshairs"></i></button><button type="button" data-action="weaponDamage" title="Урон"><i class="fa-solid fa-burst"></i></button><button type="button" data-item-inline-toggle title="Показать описание"><i class="fa-solid fa-chevron-down"></i></button><button type="button" data-action="itemEdit" title="Открыть"><i class="fa-solid fa-pen"></i></button><button type="button" data-action="itemDelete" title="Удалить"><i class="fa-solid fa-trash"></i></button></div>
+        <div class="dx3-item-inline-description" hidden><div class="dx3-inline-facts"><span><b>Запас:</b> {{item.system.stock}}</span><span><b>Экипировано:</b> {{#if item.system.equipped}}да{{else}}нет{{/if}}</span></div><div>{{{item.system.description}}}</div></div>
+      </article>
+      {{else}}<div class="dx3-power-sheet-empty">Оружие не добавлено.</div>{{/each}}
+    </div>
+  </section>
+
+  <div class="dx3-two-column equipment-columns dx3-modern-equipment-columns">
+    <section class="dx3-panel dx3-gear-section compact">
+      <div class="section-title-actions"><h2>Броня</h2><button type="button" class="library-action" data-action="equipmentLibrary"><i class="fa-solid fa-box-open"></i> Каталог</button><button type="button" data-action="itemCreate" data-type="armor"><i class="fa-solid fa-plus"></i></button></div>
+      <div class="dx3-gear-card-list">
+        {{#each armors as |item|}}
+        <article class="dx3-gear-card draggable" data-item-id="{{item.id}}">
+          <div class="dx3-gear-card-head"><img src="{{item.img}}" alt=""><div><a data-action="itemEdit">{{item.name}}</a><small>{{item.system.armorType}}{{#if item.system.equipped}} · экипировано{{/if}}</small></div><div class="dx3-gear-actions"><button type="button" data-item-inline-toggle title="Показать описание"><i class="fa-solid fa-chevron-down"></i></button><button type="button" data-action="itemEdit"><i class="fa-solid fa-pen"></i></button><button type="button" data-action="itemDelete"><i class="fa-solid fa-trash"></i></button></div></div>
+          <div class="dx3-gear-stat-strip"><span><small>Броня</small><b>{{item.system.armor}}</b></span><span><small>Уклон.</small><b>{{item.system.dodge}}</b></span><span><small>Иниц.</small><b>-{{item.system.initiative}}</b></span><span><small>Запас</small><b>{{item.system.stock}}</b></span></div>
+          <div class="dx3-item-inline-description" hidden><div>{{{item.system.description}}}</div></div>
+        </article>
+        {{else}}<div class="dx3-power-sheet-empty">Броня не добавлена.</div>{{/each}}
+      </div>
+    </section>
+
+    <section class="dx3-panel dx3-gear-section compact">
+      <div class="section-title-actions"><h2>Предметы</h2><button type="button" class="library-action" data-action="equipmentLibrary"><i class="fa-solid fa-box-open"></i> Каталог</button><button type="button" data-action="itemCreate" data-type="misc"><i class="fa-solid fa-plus"></i></button></div>
+      <div class="dx3-gear-card-list">
+        {{#each misc as |item|}}
+        <article class="dx3-gear-card draggable" data-item-id="{{item.id}}">
+          <div class="dx3-gear-card-head"><img src="{{item.img}}" alt=""><div><a data-action="itemEdit">{{item.name}}</a><small>{{item.system.itemType}} · запас {{item.system.stock}}</small></div><div class="dx3-gear-actions"><button type="button" data-action="itemUse" title="Показать в чате"><i class="fa-solid fa-message"></i></button><button type="button" data-item-inline-toggle title="Показать описание"><i class="fa-solid fa-chevron-down"></i></button><button type="button" data-action="itemEdit"><i class="fa-solid fa-pen"></i></button><button type="button" data-action="itemDelete"><i class="fa-solid fa-trash"></i></button></div></div>
+          <div class="dx3-gear-stat-strip"><span><small>Навык</small><b>{{item.system.skill}}</b></span><span><small>Кубы</small><b>{{item.system.diceBonus}}</b></span><span><small>Результат</small><b>{{item.system.scoreBonus}}</b></span><span><small>Запас</small><b>{{item.system.stock}}</b></span></div>
+          <div class="dx3-item-inline-description" hidden><div>{{{item.system.description}}}</div></div>
+        </article>
+        {{else}}<div class="dx3-power-sheet-empty">Предметы не добавлены.</div>{{/each}}
+      </div>
+    </section>
+  </div>
+
+  <section class="dx3-panel dx3-combo-section">
+    <div class="section-title-actions"><h2>Комбо</h2><button type="button" class="primary-action" data-action="itemCreate" data-type="combo"><i class="fa-solid fa-link"></i> Собрать комбо</button></div>
+    <div class="dx3-combo-card-list">
+      {{#each combos as |row|}}
+      <article class="dx3-combo-card draggable {{#if row.analysis}}{{#if row.analysis.valid}}ready{{else}}invalid{{/if}}{{/if}}" data-item-id="{{row.item.id}}">
+        <div class="dx3-combo-card-main"><img src="{{row.item.img}}" alt=""><div><a data-action="itemEdit">{{row.item.name}}</a><small>{{#if row.isAuto}}{{row.linkedCount}} способн. · {{row.analysis.timing}} · {{row.analysis.skill}}{{else}}ручное комбо · {{row.item.system.timing}}{{/if}}</small></div></div>
+        {{#if row.analysis}}
+        <div class="dx3-combo-card-stats"><span><small>Кубы</small><b>{{row.analysis.diceBonus}}</b></span><span><small>Крит</small><b>{{row.analysis.critical}}</b></span><span><small>Результат</small><b>{{row.analysis.scoreBonus}}</b></span><span><small>Сила</small><b>{{row.analysis.attackFormula}}</b></span><span><small>Защита</small><b>{{row.analysis.guardValue}}</b></span><span><small>Вторжение</small><b>{{row.analysis.encroachDisplay}}</b></span></div>
+        {{else}}
+        <div class="dx3-combo-card-stats"><span><small>До 100%</small><b>+{{row.item.system.diceUnder}} / К{{row.item.system.criticalUnder}}</b></span><span><small>100%+</small><b>+{{row.item.system.diceOver}} / К{{row.item.system.criticalOver}}</b></span><span><small>Сила</small><b>{{row.item.system.attackUnder}} → {{row.item.system.attackOver}}</b></span><span><small>Вторжение</small><b>{{row.item.system.encroachFormula}}</b></span></div>
+        {{/if}}
+        <div class="dx3-combo-card-actions"><button type="button" data-action="itemUse" title="Использовать"><i class="fa-solid fa-play"></i></button><button type="button" data-action="comboDamage" title="Урон"><i class="fa-solid fa-burst"></i></button><button type="button" data-item-inline-toggle title="Показать описание"><i class="fa-solid fa-chevron-down"></i></button><button type="button" data-action="itemEdit"><i class="fa-solid fa-pen"></i></button><button type="button" data-action="itemDelete"><i class="fa-solid fa-trash"></i></button></div>
+        <div class="dx3-item-inline-description" hidden>{{#if row.analysis}}{{#if row.analysis.errors.length}}<div class="dx3-inline-warning"><b>Проблемы:</b> {{#each row.analysis.errors as |e|}}{{e}} {{/each}}</div>{{/if}}{{/if}}<div>{{{row.item.system.description}}}</div></div>
+      </article>
+      {{else}}<div class="dx3-power-sheet-empty">Комбо пока нет. Нажмите «Собрать комбо» и выберите способности.</div>{{/each}}
+    </div>
+  </section>
+
+  <section class="dx3-panel notes-panel">
+    <h2>Заметки</h2>
+    <textarea name="system.details.notes" rows="8">{{system.details.notes}}</textarea>
+  </section>
+</div>

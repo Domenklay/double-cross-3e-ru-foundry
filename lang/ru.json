@@ -1,0 +1,17 @@
+{
+  "DOUBLECROSS.SystemName": "Double Cross The 3rd Edition RU",
+  "DOUBLECROSS.ActorCharacter": "Персонаж",
+  "DOUBLECROSS.ActorEnemy": "Противник",
+  "DOUBLECROSS.ItemPower": "Способность",
+  "DOUBLECROSS.ItemWeapon": "Оружие",
+  "DOUBLECROSS.ItemArmor": "Броня",
+  "DOUBLECROSS.ItemMisc": "Предмет",
+  "DOUBLECROSS.ItemCombo": "Комбо",
+  "TYPES.Actor.character": "Персонаж",
+  "TYPES.Actor.enemy": "Противник",
+  "TYPES.Item.power": "Способность",
+  "TYPES.Item.weapon": "Оружие",
+  "TYPES.Item.armor": "Броня",
+  "TYPES.Item.misc": "Предмет",
+  "TYPES.Item.combo": "Комбо"
+}
