@@ -1,4 +1,4 @@
-name: Import Double Cross v0.5.1
+name: Publish Double Cross v0.5.1
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 jobs:
-  import:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,32 +18,41 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reconstruct and verify package
+      - name: Apply v0.5.1 update
         shell: bash
         run: |
           set -euo pipefail
-          cat .import-v0.5.1/part-* > /tmp/dx3-v051.b64
-          base64 -d /tmp/dx3-v051.b64 > /tmp/dx3-v051.zip
-          echo '9929f5f8362b3c4554887c17262df9c413f3116aed1035fe5ade1102d6ab94a3  /tmp/dx3-v051.zip' | sha256sum -c -
-          rm -rf /tmp/dx3-v051-unpack
-          mkdir -p /tmp/dx3-v051-unpack
-          unzip -q /tmp/dx3-v051.zip -d /tmp/dx3-v051-unpack
-          test -f /tmp/dx3-v051-unpack/double-cross-3e-ru/system.json
-          grep -q '"version": "0.5.1"' /tmp/dx3-v051-unpack/double-cross-3e-ru/system.json
+          base64 -d .import-v0.5.1/update.patch.gz.b64 | gzip -d > /tmp/v051.patch
+          patch -p2 < /tmp/v051.patch
+          cat .import-v0.5.1/actor-*.txt | base64 -d | gzip -d > module/sheets/actor-sheet.mjs
+          echo '89081dae9a7a1cf581c22928d7a4392261f44ada0e03e6d2e10c3f4bf173a00e  module/sheets/actor-sheet.mjs' | sha256sum -c -
+          grep -q '"version": "0.5.1"' system.json
+          grep -q 'v0.5.1-EQUIPMENT-COMBO-FINAL.zip' system.json
+          node --check module/combo-engine.mjs
+          node --check module/sheets/actor-sheet.mjs
+          node --check module/sheets/item-sheet.mjs
+          node --check module/main.mjs
 
-      - name: Publish source and install ZIP
+      - name: Build v0.5.1 install package
         shell: bash
         run: |
           set -euo pipefail
-          for path in LICENSE.txt README_RU.md docs lang module styles system.json templates assets; do
-            rm -rf "$path"
-          done
-          cp -a /tmp/dx3-v051-unpack/double-cross-3e-ru/. .
           cp README_RU.md README.md
-          rm -rf dist
+          rm -rf /tmp/dx3-stage
+          mkdir -p /tmp/dx3-stage/double-cross-3e-ru
+          for path in LICENSE.txt README_RU.md docs lang module styles system.json templates assets; do
+            if [ -e "$path" ]; then cp -a "$path" /tmp/dx3-stage/double-cross-3e-ru/; fi
+          done
           mkdir -p dist
-          cp /tmp/dx3-v051.zip dist/double-cross-3e-ru-foundry-v14-v0.5.1-EQUIPMENT-COMBO-FINAL.zip
-          rm -rf .bootstrap .import-v0.5.1
+          rm -f dist/*.zip
+          (cd /tmp/dx3-stage && zip -qr "$GITHUB_WORKSPACE/dist/double-cross-3e-ru-foundry-v14-v0.5.1-EQUIPMENT-COMBO-FINAL.zip" double-cross-3e-ru)
+          unzip -t dist/double-cross-3e-ru-foundry-v14-v0.5.1-EQUIPMENT-COMBO-FINAL.zip
+
+      - name: Clean import helpers and install build workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf .import-v0.5.1 .bootstrap
           rm -f .github/workflows/bootstrap.yml .github/workflows/import-v0.5.1.yml .github/workflows/publish-v0.5.0.yml
           cat > .github/workflows/build.yml <<'YAML'
           name: Build Foundry package
@@ -73,6 +82,7 @@ jobs:
                       if [ -e "$path" ]; then cp -a "$path" /tmp/dx3-stage/double-cross-3e-ru/; fi
                     done
                     mkdir -p dist
+                    rm -f dist/*.zip
                     (cd /tmp/dx3-stage && zip -qr "$GITHUB_WORKSPACE/dist/double-cross-3e-ru-foundry-v14-v0.5.1-EQUIPMENT-COMBO-FINAL.zip" double-cross-3e-ru)
                 - name: Commit package
                   shell: bash
@@ -93,5 +103,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'Publish Double Cross 3E RU v0.5.1 equipment and combo UI [skip ci]'
+          git commit -m 'Publish Double Cross 3E RU v0.5.1 equipment and combo final [skip ci]'
           git push
