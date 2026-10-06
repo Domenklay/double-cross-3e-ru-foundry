@@ -18,7 +18,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .bootstrap/part-*.txt | base64 -d > /tmp/double-cross.zip
+          cat .bootstrap/part-*.txt | tr -cd 'A-Za-z0-9+/=' | base64 -d > /tmp/double-cross.zip
           unzip -t /tmp/double-cross.zip
           rm -rf /tmp/double-cross-unpack
           mkdir -p /tmp/double-cross-unpack
