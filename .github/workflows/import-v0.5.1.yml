@@ -1,0 +1,97 @@
+name: Import Double Cross v0.5.1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.import-v0.5.1/READY'
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct and verify package
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .import-v0.5.1/part-* > /tmp/dx3-v051.b64
+          base64 -d /tmp/dx3-v051.b64 > /tmp/dx3-v051.zip
+          echo '9929f5f8362b3c4554887c17262df9c413f3116aed1035fe5ade1102d6ab94a3  /tmp/dx3-v051.zip' | sha256sum -c -
+          rm -rf /tmp/dx3-v051-unpack
+          mkdir -p /tmp/dx3-v051-unpack
+          unzip -q /tmp/dx3-v051.zip -d /tmp/dx3-v051-unpack
+          test -f /tmp/dx3-v051-unpack/double-cross-3e-ru/system.json
+          grep -q '"version": "0.5.1"' /tmp/dx3-v051-unpack/double-cross-3e-ru/system.json
+
+      - name: Publish source and install ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in LICENSE.txt README_RU.md docs lang module styles system.json templates assets; do
+            rm -rf "$path"
+          done
+          cp -a /tmp/dx3-v051-unpack/double-cross-3e-ru/. .
+          cp README_RU.md README.md
+          rm -rf dist
+          mkdir -p dist
+          cp /tmp/dx3-v051.zip dist/double-cross-3e-ru-foundry-v14-v0.5.1-EQUIPMENT-COMBO-FINAL.zip
+          rm -rf .bootstrap .import-v0.5.1
+          rm -f .github/workflows/bootstrap.yml .github/workflows/import-v0.5.1.yml .github/workflows/publish-v0.5.0.yml
+          cat > .github/workflows/build.yml <<'YAML'
+          name: Build Foundry package
+
+          on:
+            push:
+              branches: [main]
+              paths-ignore:
+                - 'dist/**'
+
+          permissions:
+            contents: write
+
+          jobs:
+            package:
+              if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - name: Build installable zip
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    rm -rf /tmp/dx3-stage
+                    mkdir -p /tmp/dx3-stage/double-cross-3e-ru
+                    for path in LICENSE.txt README_RU.md docs lang module styles system.json templates assets; do
+                      if [ -e "$path" ]; then cp -a "$path" /tmp/dx3-stage/double-cross-3e-ru/; fi
+                    done
+                    mkdir -p dist
+                    (cd /tmp/dx3-stage && zip -qr "$GITHUB_WORKSPACE/dist/double-cross-3e-ru-foundry-v14-v0.5.1-EQUIPMENT-COMBO-FINAL.zip" double-cross-3e-ru)
+                - name: Commit package
+                  shell: bash
+                  run: |
+                    set -euo pipefail
+                    git config user.name 'github-actions[bot]'
+                    git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                    git add dist/
+                    if git diff --cached --quiet; then exit 0; fi
+                    git commit -m 'Build Foundry package [skip ci]'
+                    git push
+          YAML
+
+      - name: Commit v0.5.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Publish Double Cross 3E RU v0.5.1 equipment and combo UI [skip ci]'
+          git push
