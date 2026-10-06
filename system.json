@@ -1,0 +1,99 @@
+{
+  "id": "double-cross-3e-ru",
+  "type": "system",
+  "title": "Double Cross The 3rd Edition RU",
+  "description": "Неофициальная русская система Double Cross The 3rd Edition для Foundry VTT 14: мастер создания, удобные листы способностей и снаряжения, конструктор комбо по правилам, каталоги, 400 противников и автоматизация игровых механик.",
+  "version": "0.5.0",
+  "compatibility": {
+    "minimum": "14",
+    "verified": "14",
+    "maximum": "14"
+  },
+  "authors": [
+    {
+      "name": "Unofficial fan implementation"
+    }
+  ],
+  "esmodules": [
+    "module/main.mjs"
+  ],
+  "styles": [
+    "styles/double-cross.css"
+  ],
+  "languages": [
+    {
+      "lang": "ru",
+      "name": "Русский",
+      "path": "lang/ru.json"
+    }
+  ],
+  "initiative": "@initiative",
+  "grid": {
+    "type": 1,
+    "distance": 1,
+    "units": "м",
+    "diagonals": 0
+  },
+  "primaryTokenAttribute": "hp",
+  "secondaryTokenAttribute": "encroachment",
+  "documentTypes": {
+    "Actor": {
+      "character": {
+        "htmlFields": [
+          "details.notes"
+        ]
+      },
+      "enemy": {
+        "htmlFields": [
+          "details.notes"
+        ]
+      }
+    },
+    "Item": {
+      "power": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "weapon": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "armor": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "misc": {
+        "htmlFields": [
+          "description"
+        ]
+      },
+      "combo": {
+        "htmlFields": [
+          "description"
+        ]
+      }
+    }
+  },
+  "flags": {
+    "hotReload": {
+      "extensions": [
+        "css",
+        "hbs",
+        "json",
+        "mjs"
+      ],
+      "paths": [
+        "styles",
+        "templates",
+        "lang",
+        "module"
+      ]
+    }
+  },
+  "license": "LICENSE.txt",
+  "readme": "README_RU.md",
+  "media": []
+}
