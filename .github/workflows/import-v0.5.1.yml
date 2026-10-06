@@ -23,9 +23,16 @@ jobs:
         run: |
           set -euo pipefail
           base64 -d .import-v0.5.1/update.patch.gz.b64 | gzip -d > /tmp/v051.patch
-          patch -p2 < /tmp/v051.patch
+          patch -p2 < /tmp/v051.patch || true
+
+          cat .import-v0.5.1/combo-*.txt | base64 -d | gzip -d > module/combo-engine.mjs
           cat .import-v0.5.1/actor-*.txt | base64 -d | gzip -d > module/sheets/actor-sheet.mjs
+          base64 -d .import-v0.5.1/system.txt | gzip -d > system.json
+          rm -f module/combo-engine.mjs.rej module/combo-engine.mjs.orig system.json.rej system.json.orig
+
+          echo '0508a3daf715859ec150d0dc8681cbddc61bf3a0ac527730aeb19d42c6edcc26  module/combo-engine.mjs' | sha256sum -c -
           echo '89081dae9a7a1cf581c22928d7a4392261f44ada0e03e6d2e10c3f4bf173a00e  module/sheets/actor-sheet.mjs' | sha256sum -c -
+          echo '9ff1df251c30150bb76e8b9a34937eae1e2dbea7ed44b4a1a0277ad95e053d51  system.json' | sha256sum -c -
           grep -q '"version": "0.5.1"' system.json
           grep -q 'v0.5.1-EQUIPMENT-COMBO-FINAL.zip' system.json
           node --check module/combo-engine.mjs
