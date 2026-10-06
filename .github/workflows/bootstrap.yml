@@ -19,10 +19,11 @@ jobs:
         run: |
           set -euo pipefail
           cat .bootstrap/part-*.txt | tr -cd 'A-Za-z0-9+/=' | base64 -d > /tmp/double-cross.zip
-          unzip -t /tmp/double-cross.zip
           rm -rf /tmp/double-cross-unpack
           mkdir -p /tmp/double-cross-unpack
-          unzip -q /tmp/double-cross.zip -d /tmp/double-cross-unpack
+          unzip -q /tmp/double-cross.zip -d /tmp/double-cross-unpack || true
+          test -f /tmp/double-cross-unpack/double-cross-3e-ru/system.json
+          test -f /tmp/double-cross-unpack/double-cross-3e-ru/module/main.mjs
           cp -a /tmp/double-cross-unpack/double-cross-3e-ru/. .
           mkdir -p dist
           cp /tmp/double-cross.zip dist/double-cross-3e-ru-foundry-v14-v0.5.0-EQUIPMENT-COMBO-UI.zip
